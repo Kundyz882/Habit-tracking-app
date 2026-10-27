@@ -10,6 +10,8 @@ import 'add_habit_screen.dart';
 import 'habit_detail_screen.dart';
 import 'habit_setup_screen.dart';
 import 'reflection_sheet.dart';
+import 'ai_coach_screen.dart';
+import '../widgets/ai_tips_section.dart';
 
 class TodayScreen extends StatefulWidget {
   const TodayScreen({super.key, required this.store});
@@ -106,6 +108,22 @@ class _TodayScreenState extends State<TodayScreen> with WidgetsBindingObserver {
                 if (habits.isNotEmpty)
                   _SummaryCard(done: done, total: habits.length),
                 const SizedBox(height: 16),
+                if (habits.isNotEmpty) ...[
+                  AiTipsSection(store: store),
+                  const SizedBox(height: 4),
+                  Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.auto_awesome_rounded),
+                      title: const Text('Talk to your AI habit coach'),
+                      subtitle: const Text('Get a practical suggestion based on your check-ins'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => AiCoachScreen(store: store),
+                      )),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 if (habits.any((h) => unrecordedDays(h, today).isNotEmpty))
                   Card(
                       child: ListTile(

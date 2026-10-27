@@ -1,9 +1,13 @@
-# BM Habits — Version A (no AI)
+# BM Habits — AI habit tracker
 
 Flutter / Dart mobile app for the study "Development and Usability Evaluation
 of a Mobile Habit-Tracking Application with AI".
 
 Animated branded splash appears while Firebase restores the session.
+
+The app includes personalised AI recommendations and a conversational habit
+coach. AI features require the separately deployed recommendation API; configure
+its URL with the `AI_SERVICE_URL` Dart define when building or running the app.
 
 ## Features
 - Create habits of two types: **build** (do it) and **quit** (avoid it)
@@ -18,6 +22,9 @@ Animated branded splash appears while Firebase restores the session.
 - Habits and daily entries: `users/{uid}/habits/{habitId}`; rules restrict access to the owner
 - Live updates across devices. Persistent Firestore caching is disabled.
 - Existing local prototype accounts and habits are not migrated; register a Firebase account.
+- AI risk estimates and short personalised tips based on habit check-ins.
+- AI habit coach chat, which receives a limited summary of the user's habits
+  and recent check-ins to suggest practical next steps.
 
 ## Daily routine and reflections
 - First-time users select daily build/quit habits or add their own. Choices persist in Firestore.
@@ -25,7 +32,14 @@ Animated branded splash appears while Firebase restores the session.
 - Unrecorded past days remain unknown. A review card offers the last 7 days; the habit calendar allows editing older visible dates.
 - Review happens inside the app on return; no scheduled or push notifications are configured.
 - Entry fields include `success`, `timestamp` (recorded time), `reasons` (stable factor codes), and `note`. The entries map key identifies the habit day, including retrospective records.
-- These are self-reported factors; no AI analysis is performed.
+- Reasons are self-reported. The AI service uses up to 60 days of success/missed
+  history and reasons from the last 14 days to generate recommendations. Tips
+  appear after at least 7 days of history. The coach receives summaries for up
+  to 12 habits and the most recent 12 chat messages. Chat history is kept in
+  memory while the app is open.
+- AI responses depend on the separately hosted backend. If it is unavailable,
+  AI cards may be hidden and the coach will show a connection message. The chat
+  API may also enforce a temporary quota.
 
 ## Run
 ```bash
@@ -48,13 +62,15 @@ lib/
   screens/                     today, history, add habit, habit detail
 ```
 
-## Data model (ready for the AI module)
-Each check-in is stored as an `Entry`: success flag, timestamp (time of
-check-in) and an optional trigger for lapses. Together with the habit type,
-category and the date key, this covers the fields needed later for the
-features (day of week, time, streak, missed days in the last 7).
+## AI service configuration
+Set `AI_SERVICE_URL` in `lib/config.dart` or pass it as a Dart define, for
+example:
 
-## Next steps
-1. Extend Firestore data model as needed
-2. Usage logging for engagement metrics (active days, completion rate)
-3. Version B: AI recommendation service (Python) and a recommendations card
+```bash
+flutter run --dart-define=AI_SERVICE_URL=https://habit-tracking-application-with-ai.onrender.com
+```
+
+The backend must provide `POST /recommend` and `POST /chat` endpoints. The
+app's API client is in `lib/services/ai_service.dart`; the recommendations
+card and coach screen are in `lib/widgets/ai_tips_section.dart` and
+`lib/screens/ai_coach_screen.dart`.
