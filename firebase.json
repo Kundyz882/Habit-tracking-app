@@ -1,0 +1,34 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "habit-tracker-797b8",
+          "appId": "1:926173150335:android:38695e215c1208e93a134a",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "habit-tracker-797b8",
+          "appId": "1:926173150335:ios:27ee53476727352c3a134a",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "habit-tracker-797b8",
+          "configurations": {
+            "android": "1:926173150335:android:38695e215c1208e93a134a",
+            "ios": "1:926173150335:ios:27ee53476727352c3a134a",
+            "web": "1:926173150335:web:43b29960b8ca0f3c3a134a"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}
